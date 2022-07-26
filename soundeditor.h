@@ -15,6 +15,9 @@ public:
     SoundEditor(QWidget *parent = nullptr);
     ~SoundEditor();
 
+private slots:
+    void on_timeline_valueChanged(int value);
+
 private:
     Ui::SoundEditor *ui;
 };

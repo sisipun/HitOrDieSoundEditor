@@ -5,8 +5,7 @@
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class SoundEditor; }
-class QMediaPlayer;
-class QAudioOutput;
+class Player;
 QT_END_NAMESPACE
 
 class SoundEditor : public QMainWindow
@@ -17,15 +16,8 @@ public:
     SoundEditor(QWidget *parent = nullptr);
     ~SoundEditor();
 
-private slots:
-    void on_timeline_valueChanged(int value);
-
-    void on_loadsound_clicked();
-
 private:
     Ui::SoundEditor *ui;
-    QString soundFileName;
-    QMediaPlayer *mediaPlayer;
-    QAudioOutput *audioOutput;
+    Player *player;
 };
 #endif // SOUNDEDITOR_H

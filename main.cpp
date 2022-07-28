@@ -1,13 +1,14 @@
 #include "soundeditor.h"
+#include "player.h"
 
 #include <QApplication>
-#include <QTimeLine>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    QTimeLine t;
+
     SoundEditor w;
     w.show();
+
     return a.exec();
 }

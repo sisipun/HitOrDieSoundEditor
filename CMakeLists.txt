@@ -19,6 +19,7 @@ find_package(Qt${QT_VERSION_MAJOR}  REQUIRED COMPONENTS Multimedia)
 set(PROJECT_SOURCES
         main.cpp
         soundeditor.cpp soundeditor.h soundeditor.ui
+        player.h player.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

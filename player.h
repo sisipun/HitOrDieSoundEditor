@@ -22,6 +22,7 @@ signals:
 
 private slots:
     void onLoadSoundButtonClicked();
+    void onPauseButtonClicked();
     void onDurationChanged(qint64 duration);
     void onPositionChanged(qint64 position);
     void onTimelinePressed();
@@ -34,6 +35,7 @@ private:
     QAudioOutput *audioOutput;
 
     QLabel *title;
+    QPushButton *pauseButton;
     QSlider *timeline;
     QTimeEdit *timer;
     QPushButton *loadSoundButton;

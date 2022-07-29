@@ -18,7 +18,8 @@ class Player : public QWidget
 public:
     explicit Player(QWidget *parent = nullptr);
 
-signals:
+    bool isLoaded() const;
+    float getSeconds() const;
 
 private slots:
     void onLoadSoundButtonClicked();
@@ -31,14 +32,14 @@ private slots:
     void onTimelineValueChanged(int value);
 
 private:
-    QMediaPlayer *mediaPlayer;
-    QAudioOutput *audioOutput;
+    QMediaPlayer *mediaPlayer = nullptr;
+    QAudioOutput *audioOutput = nullptr;
 
-    QLabel *title;
-    QPushButton *pauseButton;
-    QSlider *timeline;
-    QTimeEdit *timer;
-    QPushButton *loadSoundButton;
+    QLabel *title = nullptr;
+    QPushButton *pauseButton = nullptr;
+    QSlider *timeline = nullptr;
+    QTimeEdit *timer = nullptr;
+    QPushButton *loadSoundButton = nullptr;
 };
 
 #endif // PLAYER_H

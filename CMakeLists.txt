@@ -20,6 +20,7 @@ set(PROJECT_SOURCES
         main.cpp
         soundeditor.cpp soundeditor.h soundeditor.ui
         player.h player.cpp
+        timing.h timing.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

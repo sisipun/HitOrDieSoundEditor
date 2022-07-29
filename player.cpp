@@ -2,7 +2,6 @@
 
 #include <QMediaPlayer>
 #include <QAudioOutput>
-#include <QPushButton>
 #include <QtWidgets>
 
 Player::Player(QWidget *parent)
@@ -40,12 +39,15 @@ Player::Player(QWidget *parent)
     connect(loadSoundButton, &QPushButton::clicked, this, &Player::onLoadSoundButtonClicked);
 
     QBoxLayout *layout = new QVBoxLayout(this);
+
     QBoxLayout *titleLayout = new QHBoxLayout(this);
     titleLayout->addWidget(title);
+
     QBoxLayout *playerLayout = new QHBoxLayout(this);
     playerLayout->addWidget(pauseButton);
     playerLayout->addWidget(timeline);
     playerLayout->addWidget(timer);
+
     QBoxLayout *actionsLayout = new QHBoxLayout(this);
     actionsLayout->addWidget(loadSoundButton);
 
@@ -54,6 +56,16 @@ Player::Player(QWidget *parent)
     layout->addLayout(actionsLayout);
 
     setLayout(layout);
+}
+
+bool Player::isLoaded() const
+{
+    return timeline->isEnabled();
+}
+
+float Player::getSeconds() const
+{
+    return timeline->value() / 1000.0;
 }
 
 void Player::onLoadSoundButtonClicked()

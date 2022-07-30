@@ -58,6 +58,25 @@ Player::Player(QWidget *parent)
     setLayout(layout);
 }
 
+void Player::play()
+{
+    mediaPlayer->play();
+    pauseButton->setText(tr("||"));
+}
+
+void Player::pause()
+{
+    mediaPlayer->pause();
+    pauseButton->setText(tr(">"));
+}
+
+void Player::stop()
+{
+    mediaPlayer->stop();
+    timeline->setValue(0);
+    pauseButton->setText(tr(">"));
+}
+
 bool Player::isLoaded() const
 {
     return timeline->isEnabled();
@@ -70,15 +89,17 @@ float Player::getSeconds() const
 
 void Player::onLoadSoundButtonClicked()
 {
+    pause();
     QString soundFileName = QFileDialog::getOpenFileName(this, tr("Open sound"), QString(), tr("Sound Files (*.wav *.mp3 *.ogg)"));
     if (!soundFileName.isEmpty())
     {
         title->setText(soundFileName);
         timeline->setDisabled(false);
         pauseButton->setDisabled(false);
-        pauseButton->setText(tr("||"));
         mediaPlayer->setSource(QUrl::fromLocalFile(soundFileName));
-        mediaPlayer->play();
+        emit loaded(true);
+
+        play();
     }
 }
 
@@ -86,13 +107,11 @@ void Player::onPauseButtonClicked()
 {
     if (mediaPlayer->playbackState() == QMediaPlayer::PlaybackState::PlayingState)
     {
-        mediaPlayer->pause();
-        pauseButton->setText(tr(">"));
+        pause();
     }
     else
     {
-        mediaPlayer->play();
-        pauseButton->setText(tr("||"));
+        play();
     }
 }
 
@@ -115,14 +134,11 @@ void Player::onTimelineReleased()
 {
     if (timeline->maximum() != timeline->value())
     {
-        mediaPlayer->play();
-        pauseButton->setText(tr("||"));
+        play();
     }
     else
     {
-        mediaPlayer->stop();
-        timeline->setValue(0);
-        pauseButton->setText(tr(">"));
+        stop();
     }
 }
 
@@ -137,8 +153,6 @@ void Player::onTimelineValueChanged(int value)
 
     if (timeline->maximum() == value && !timeline->isSliderDown())
     {
-        mediaPlayer->stop();
-        timeline->setValue(0);
-        pauseButton->setText(tr(">"));
+        stop();
     }
 }

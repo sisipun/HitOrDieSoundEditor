@@ -18,8 +18,14 @@ class Player : public QWidget
 public:
     explicit Player(QWidget *parent = nullptr);
 
+    void play();
+    void pause();
+    void stop();
     bool isLoaded() const;
     float getSeconds() const;
+
+signals:
+    void loaded(bool loaded);
 
 private slots:
     void onLoadSoundButtonClicked();

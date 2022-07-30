@@ -18,13 +18,16 @@ public:
 
 private slots:
     void onAddButtonClicked();
+    void onRemoveButtonClicked();
+    void onPlayerLoaded(bool loaded);
 
 private:
     Player *player;
 
+    QListWidget *timingsView = nullptr;
     QComboBox *actions = nullptr;
     QPushButton *addButton = nullptr;
-    QListWidget *timingsView = nullptr;
+    QPushButton *removeButton = nullptr;
 
     QMap<float, QString> timings;
 };

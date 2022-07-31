@@ -16,9 +16,12 @@ class Timing : public QWidget
 public:
     explicit Timing(Player* player, QWidget *parent = nullptr);
 
+    void reloadTimingsView();
+
 private slots:
     void onAddButtonClicked();
     void onRemoveButtonClicked();
+    void onExportButtonClicked();
     void onPlayerLoaded(bool loaded);
 
 private:
@@ -28,6 +31,7 @@ private:
     QComboBox *actions = nullptr;
     QPushButton *addButton = nullptr;
     QPushButton *removeButton = nullptr;
+    QPushButton *exportButton = nullptr;
 
     QMap<float, QString> timings;
 };

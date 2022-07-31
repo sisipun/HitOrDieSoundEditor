@@ -40,15 +40,15 @@ Player::Player(QWidget *parent)
 
     QBoxLayout *layout = new QVBoxLayout(this);
 
-    QBoxLayout *titleLayout = new QHBoxLayout(this);
+    QBoxLayout *titleLayout = new QHBoxLayout;
     titleLayout->addWidget(title);
 
-    QBoxLayout *playerLayout = new QHBoxLayout(this);
+    QBoxLayout *playerLayout = new QHBoxLayout;
     playerLayout->addWidget(pauseButton);
     playerLayout->addWidget(timeline);
     playerLayout->addWidget(timer);
 
-    QBoxLayout *actionsLayout = new QHBoxLayout(this);
+    QBoxLayout *actionsLayout = new QHBoxLayout;
     actionsLayout->addWidget(loadSoundButton);
 
     layout->addLayout(titleLayout);
@@ -87,20 +87,27 @@ float Player::getSeconds() const
     return timeline->value() / 1000.0;
 }
 
+QString Player::getSoundName() const
+{
+    return title->text();
+}
+
 void Player::onLoadSoundButtonClicked()
 {
     pause();
-    QString soundFileName = QFileDialog::getOpenFileName(this, tr("Open sound"), QString(), tr("Sound Files (*.wav *.mp3 *.ogg)"));
-    if (!soundFileName.isEmpty())
+    QString soundFilePath = QFileDialog::getOpenFileName(this, tr("Open sound"), QString(), tr("Sound Files (*.wav *.mp3 *.ogg)"));
+    if (soundFilePath.isEmpty())
     {
-        title->setText(soundFileName);
-        timeline->setDisabled(false);
-        pauseButton->setDisabled(false);
-        mediaPlayer->setSource(QUrl::fromLocalFile(soundFileName));
-        emit loaded(true);
-
-        play();
+        return;
     }
+
+    title->setText(soundFilePath);
+    timeline->setDisabled(false);
+    pauseButton->setDisabled(false);
+    mediaPlayer->setSource(QUrl::fromLocalFile(soundFilePath));
+    emit loaded(true);
+
+    play();
 }
 
 void Player::onPauseButtonClicked()

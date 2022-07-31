@@ -23,6 +23,7 @@ public:
     void stop();
     bool isLoaded() const;
     float getSeconds() const;
+    QString getSoundName() const;
 
 signals:
     void loaded(bool loaded);

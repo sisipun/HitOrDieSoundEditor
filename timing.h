@@ -8,30 +8,34 @@ class Player;
 class QPushButton;
 class QComboBox;
 class QListWidget;
+class QDoubleSpinBox;
 QT_END_NAMESPACE
 
 class Timing : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Timing(Player* player, QWidget *parent = nullptr);
+    explicit Timing(Player* player, QWidget* parent = nullptr);
 
     void reloadTimingsView();
 
 private slots:
+    void onPlayerLoaded(bool loaded);
     void onAddButtonClicked();
     void onRemoveButtonClicked();
     void onExportButtonClicked();
-    void onPlayerLoaded(bool loaded);
+    void onImportButtonClicked();
 
 private:
-    Player *player;
+    Player* player;
 
-    QListWidget *timingsView = nullptr;
-    QComboBox *actions = nullptr;
-    QPushButton *addButton = nullptr;
-    QPushButton *removeButton = nullptr;
-    QPushButton *exportButton = nullptr;
+    QListWidget* timingsView = nullptr;
+    QDoubleSpinBox* actionLength = nullptr;
+    QComboBox* actions = nullptr;
+    QPushButton* addButton = nullptr;
+    QPushButton* removeButton = nullptr;
+    QPushButton* exportButton = nullptr;
+    QPushButton* importButton = nullptr;
 
     QMap<float, QString> timings;
 };

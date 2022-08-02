@@ -16,8 +16,9 @@ class Player : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Player(QWidget *parent = nullptr);
+    explicit Player(QWidget* parent = nullptr);
 
+    void load(const QString& soundFilePath);
     void play();
     void pause();
     void stop();
@@ -39,14 +40,14 @@ private slots:
     void onTimelineValueChanged(int value);
 
 private:
-    QMediaPlayer *mediaPlayer = nullptr;
-    QAudioOutput *audioOutput = nullptr;
+    QMediaPlayer* mediaPlayer = nullptr;
+    QAudioOutput* audioOutput = nullptr;
 
-    QLabel *title = nullptr;
-    QPushButton *pauseButton = nullptr;
-    QSlider *timeline = nullptr;
-    QTimeEdit *timer = nullptr;
-    QPushButton *loadSoundButton = nullptr;
+    QLabel* title = nullptr;
+    QPushButton* pauseButton = nullptr;
+    QSlider* timeline = nullptr;
+    QTimeEdit* timer = nullptr;
+    QPushButton* loadSoundButton = nullptr;
 };
 
 #endif // PLAYER_H

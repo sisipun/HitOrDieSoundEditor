@@ -1,11 +1,11 @@
 #include "player.h"
 
-#include <QMediaPlayer>
 #include <QAudioOutput>
+#include <QMediaPlayer>
 #include <QtWidgets>
 
-Player::Player(QWidget *parent)
-    : QWidget{parent}
+Player::Player(QWidget* parent)
+    : QWidget { parent }
 {
     mediaPlayer = new QMediaPlayer(this);
     audioOutput = new QAudioOutput(this);
@@ -38,17 +38,17 @@ Player::Player(QWidget *parent)
     loadSoundButton->setText(tr("Load sound"));
     connect(loadSoundButton, &QPushButton::clicked, this, &Player::onLoadSoundButtonClicked);
 
-    QBoxLayout *layout = new QVBoxLayout(this);
+    QBoxLayout* layout = new QVBoxLayout(this);
 
-    QBoxLayout *titleLayout = new QHBoxLayout;
+    QBoxLayout* titleLayout = new QHBoxLayout;
     titleLayout->addWidget(title);
 
-    QBoxLayout *playerLayout = new QHBoxLayout;
+    QBoxLayout* playerLayout = new QHBoxLayout;
     playerLayout->addWidget(pauseButton);
     playerLayout->addWidget(timeline);
     playerLayout->addWidget(timer);
 
-    QBoxLayout *actionsLayout = new QHBoxLayout;
+    QBoxLayout* actionsLayout = new QHBoxLayout;
     actionsLayout->addWidget(loadSoundButton);
 
     layout->addLayout(titleLayout);
@@ -56,6 +56,15 @@ Player::Player(QWidget *parent)
     layout->addLayout(actionsLayout);
 
     setLayout(layout);
+}
+
+void Player::load(const QString& soundFilePath)
+{
+    title->setText(soundFilePath);
+    timeline->setDisabled(false);
+    pauseButton->setDisabled(false);
+    mediaPlayer->setSource(QUrl::fromLocalFile(soundFilePath));
+    emit loaded(true);
 }
 
 void Player::play()
@@ -96,28 +105,19 @@ void Player::onLoadSoundButtonClicked()
 {
     pause();
     QString soundFilePath = QFileDialog::getOpenFileName(this, tr("Open sound"), QString(), tr("Sound Files (*.wav *.mp3 *.ogg)"));
-    if (soundFilePath.isEmpty())
-    {
+    if (soundFilePath.isEmpty()) {
         return;
     }
 
-    title->setText(soundFilePath);
-    timeline->setDisabled(false);
-    pauseButton->setDisabled(false);
-    mediaPlayer->setSource(QUrl::fromLocalFile(soundFilePath));
-    emit loaded(true);
-
+    load(soundFilePath);
     play();
 }
 
 void Player::onPauseButtonClicked()
 {
-    if (mediaPlayer->playbackState() == QMediaPlayer::PlaybackState::PlayingState)
-    {
+    if (mediaPlayer->playbackState() == QMediaPlayer::PlaybackState::PlayingState) {
         pause();
-    }
-    else
-    {
+    } else {
         play();
     }
 }
@@ -139,12 +139,9 @@ void Player::onTimelinePressed()
 
 void Player::onTimelineReleased()
 {
-    if (timeline->maximum() != timeline->value())
-    {
+    if (timeline->maximum() != timeline->value()) {
         play();
-    }
-    else
-    {
+    } else {
         stop();
     }
 }
@@ -158,8 +155,7 @@ void Player::onTimelineValueChanged(int value)
 {
     timer->setTime(QTime::fromMSecsSinceStartOfDay(value));
 
-    if (timeline->maximum() == value && !timeline->isSliderDown())
-    {
+    if (timeline->maximum() == value && !timeline->isSliderDown()) {
         stop();
     }
 }

@@ -4,7 +4,7 @@
 #include "player.h"
 #include "timing.h"
 
-SoundEditor::SoundEditor(QWidget *parent)
+SoundEditor::SoundEditor(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::SoundEditor)
 {

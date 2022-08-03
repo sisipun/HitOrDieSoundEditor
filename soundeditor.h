@@ -11,8 +11,7 @@ class Player;
 class Timing;
 QT_END_NAMESPACE
 
-class SoundEditor : public QMainWindow
-{
+class SoundEditor : public QMainWindow {
     Q_OBJECT
 
 public:

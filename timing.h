@@ -5,17 +5,18 @@
 
 QT_BEGIN_NAMESPACE
 class Player;
+class TimingCsvParser;
 class QPushButton;
 class QComboBox;
 class QListWidget;
 class QDoubleSpinBox;
 QT_END_NAMESPACE
 
-class Timing : public QWidget
-{
+class Timing : public QWidget {
     Q_OBJECT
 public:
     explicit Timing(Player* player, QWidget* parent = nullptr);
+    ~Timing();
 
     void reloadTimingsView();
 
@@ -28,6 +29,7 @@ private slots:
 
 private:
     Player* player;
+    TimingCsvParser* parser;
 
     QListWidget* timingsView = nullptr;
     QDoubleSpinBox* actionLength = nullptr;

@@ -21,6 +21,7 @@ set(PROJECT_SOURCES
         soundeditor.cpp soundeditor.h soundeditor.ui
         player.h player.cpp
         timing.h timing.cpp
+        timingcsvparser.h timingcsvparser.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

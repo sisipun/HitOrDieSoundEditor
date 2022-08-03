@@ -96,7 +96,8 @@ float Player::getSeconds() const
     return timeline->value() / 1000.0;
 }
 
-QString Player::getSoundName() const
+QString
+Player::getSoundName() const
 {
     return title->text();
 }
@@ -104,7 +105,8 @@ QString Player::getSoundName() const
 void Player::onLoadSoundButtonClicked()
 {
     pause();
-    QString soundFilePath = QFileDialog::getOpenFileName(this, tr("Open sound"), QString(), tr("Sound Files (*.wav *.mp3 *.ogg)"));
+    QString soundFilePath = QFileDialog::getOpenFileName(
+        this, tr("Open sound"), QString(), tr("Sound Files (*.wav *.mp3 *.ogg)"));
     if (soundFilePath.isEmpty()) {
         return;
     }

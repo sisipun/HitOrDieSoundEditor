@@ -1,7 +1,7 @@
+#include <QApplication>
+
 #include "player.h"
 #include "soundeditor.h"
-
-#include <QApplication>
 
 int main(int argc, char* argv[])
 {

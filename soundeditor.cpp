@@ -5,19 +5,19 @@
 #include "timing.h"
 
 SoundEditor::SoundEditor(QWidget* parent)
-    : QMainWindow(parent)
-    , ui(new Ui::SoundEditor)
+  : QMainWindow(parent)
+  , ui(new Ui::SoundEditor)
 {
-    ui->setupUi(this);
+  ui->setupUi(this);
 
-    player = new Player(this);
-    timing = new Timing(player, this);
+  player = new Player(this);
+  timing = new Timing(player, this);
 
-    ui->gridLayout->addWidget(player);
-    ui->gridLayout->addWidget(timing);
+  ui->gridLayout->addWidget(player);
+  ui->gridLayout->addWidget(timing);
 }
 
 SoundEditor::~SoundEditor()
 {
-    delete ui;
+  delete ui;
 }

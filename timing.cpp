@@ -1,8 +1,8 @@
 #include "timing.h"
 
 #include "player.h"
+#include "timingcsvparser.h"
 
-#include <QtDebug>
 #include <QtWidgets>
 
 Timing::Timing(Player* player, QWidget* parent)
@@ -11,8 +11,9 @@ Timing::Timing(Player* player, QWidget* parent)
     this->player = player;
     connect(this->player, &Player::loaded, this, &Timing::onPlayerLoaded);
 
+    this->parser = new TimingCsvParser();
+
     timingsView = new QListWidget(this);
-    timingsView->setSortingEnabled(true);
 
     actionLength = new QDoubleSpinBox(this);
     actionLength->setRange(0.01, 9999.99);
@@ -37,7 +38,8 @@ Timing::Timing(Player* player, QWidget* parent)
     exportButton = new QPushButton(this);
     exportButton->setText(tr("Export"));
     exportButton->setDisabled(true);
-    connect(exportButton, &QPushButton::clicked, this, &Timing::onExportButtonClicked);
+    connect(
+        exportButton, &QPushButton::clicked, this, &Timing::onExportButtonClicked);
 
     importButton = new QPushButton(this);
     importButton->setText(tr("Import"));
@@ -65,6 +67,11 @@ Timing::Timing(Player* player, QWidget* parent)
     setLayout(layout);
 }
 
+Timing::~Timing()
+{
+    delete parser;
+}
+
 void Timing::onPlayerLoaded(bool loaded)
 {
     actionLength->setDisabled(!loaded);
@@ -73,6 +80,7 @@ void Timing::onPlayerLoaded(bool loaded)
     removeButton->setDisabled(!loaded);
     exportButton->setDisabled(!loaded);
     timings.clear();
+    actionLength->setValue(1.0);
     reloadTimingsView();
 }
 
@@ -97,40 +105,31 @@ void Timing::onExportButtonClicked()
 {
     player->pause();
 
-    QString exportFilePath = QFileDialog::getSaveFileName(this, tr("Export file"), QString(), tr("Csv Files (*.csv)"));
+    QString exportFilePath = QFileDialog::getSaveFileName(
+        this, tr("Export file"), QString(), tr("Csv Files (*.csv)"));
     if (exportFilePath.isEmpty()) {
         return;
     }
 
-    QStringList result;
-    result.append("\"\"");
-    result.append(QString("\"%1\"").arg(player->getSoundName()));
-
-    QStringList exportedTimings;
-    QList<float> timingsKeys = timings.keys();
-    for (float key : timingsKeys) {
-        exportedTimings.append(QString("(%1, %2)").arg(key).arg(timings[key]));
-    }
-
-    result.append(QString("\"(%1)\"").arg(exportedTimings.join(",")));
-    result.append(QString("\"%1\"").arg(actionLength->value()));
-
     QFile exportFile(exportFilePath);
     if (!exportFile.open(QIODevice::WriteOnly)) {
-        QMessageBox::information(this, tr("Unable to open file"), exportFile.errorString());
+        QMessageBox::information(
+            this, tr("Unable to open file"), exportFile.errorString());
         return;
     }
 
     QTextStream out(&exportFile);
     out << ",Sound,ActionTimings,ActionLenght\n";
-    out << result.join(",");
+    out << parser->write(
+        { player->getSoundName(), timings, float(actionLength->value()) });
 }
 
 void Timing::onImportButtonClicked()
 {
     player->pause();
 
-    QString importFilePath = QFileDialog::getOpenFileName(this, tr("Import file"), QString(), tr("Csv Files (*.csv)"));
+    QString importFilePath = QFileDialog::getOpenFileName(
+        this, tr("Import file"), QString(), tr("Csv Files (*.csv)"));
     if (importFilePath.isEmpty()) {
         return;
     }
@@ -143,23 +142,16 @@ void Timing::onImportButtonClicked()
 
     QTextStream in(&importFile);
     in.readLine();
-    QString text = in.readLine();
-    QStringList result = text.mid(1, text.length() - 2).split("\",\"");
-    if (result.size() != 4) {
+    TimingData data = parser->read(in.readLine());
+
+    if (data.soundFilePath.isEmpty()) {
         QMessageBox::information(this, tr("Illegal format"), tr("File has illegal format"));
         return;
     }
 
-    QString soundFilePath = result[1].trimmed();
-    player->load(soundFilePath);
-
-    QStringList importedTimings = result[2].mid(2, result[2].length() - 4).split("),(");
-    for (const QString& importedTiming : importedTimings) {
-        QStringList splittedTiming = importedTiming.split(",");
-        timings[splittedTiming[0].trimmed().toFloat()] = splittedTiming[1].trimmed();
-    }
-    actionLength->setValue(result[3].trimmed().toDouble());
-
+    player->load(data.soundFilePath);
+    timings = data.timings;
+    actionLength->setValue(data.actionLength);
     reloadTimingsView();
     player->play();
 }

@@ -12,8 +12,7 @@ class QLabel;
 class QPushButton;
 QT_END_NAMESPACE
 
-class Player : public QWidget
-{
+class Player : public QWidget {
     Q_OBJECT
 public:
     explicit Player(QWidget* parent = nullptr);

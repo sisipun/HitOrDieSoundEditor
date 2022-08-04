@@ -1,11 +1,12 @@
 #include "timingcsvparser.h"
 
+#include "actiontype.h"
+
 #include <QObject>
 
 TimingCsvParser::TimingCsvParser() { }
 
-QString
-TimingCsvParser::write(const TimingData& data)
+QString TimingCsvParser::write(const TimingData& data)
 {
     QStringList result;
     result.append("\"\"");
@@ -14,7 +15,7 @@ TimingCsvParser::write(const TimingData& data)
     QStringList timings;
     QList<float> timingsKeys = data.timings.keys();
     for (float key : timingsKeys) {
-        timings.append(QString("(%1,%2)").arg(key).arg(data.timings[key]));
+        timings.append(QString("(%1,%2)").arg(key).arg(ACTION_TYPE_TO_STRING[data.timings[key]]));
     }
 
     result.append(QString("\"(%1)\"").arg(timings.join(",")));
@@ -23,8 +24,7 @@ TimingCsvParser::write(const TimingData& data)
     return result.join(",");
 }
 
-TimingData
-TimingCsvParser::read(QString line)
+TimingData TimingCsvParser::read(QString line)
 {
     TimingData data;
     QStringList result = line.mid(1, line.length() - 2).split("\",\"");
@@ -37,7 +37,12 @@ TimingCsvParser::read(QString line)
     QStringList importedTimings = result[2].mid(2, result[2].length() - 4).split("),(");
     for (const QString& importedTiming : importedTimings) {
         QStringList splittedTiming = importedTiming.split(",");
-        data.timings[splittedTiming[0].toFloat()] = splittedTiming[1];
+        float seconds = splittedTiming[0].toFloat();
+        QString type = splittedTiming[1];
+        if (STRING_TO_ACTION_TYPE.contains(type))
+        {
+            data.timings[seconds] = STRING_TO_ACTION_TYPE[type];
+        }
     }
 
     data.actionLength = result[3].toFloat();

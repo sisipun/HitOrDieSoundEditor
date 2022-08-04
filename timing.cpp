@@ -1,5 +1,6 @@
 #include "timing.h"
 
+#include "actiontype.h"
 #include "player.h"
 #include "timingcsvparser.h"
 
@@ -21,7 +22,7 @@ Timing::Timing(Player* player, QWidget* parent)
     actionLength->setDisabled(true);
 
     actions = new QComboBox(this);
-    actions->addItems(QStringList({ "FIRE", "RELOAD" }));
+    actions->addItems(QStringList(STRING_TO_ACTION_TYPE.keys()));
     actions->setCurrentIndex(0);
     actions->setDisabled(true);
 
@@ -88,7 +89,7 @@ void Timing::onAddButtonClicked()
 {
     float seconds = player->getSeconds();
     QString action = actions->currentText();
-    timings[seconds] = action;
+    timings[seconds] = STRING_TO_ACTION_TYPE[action];
     reloadTimingsView();
 }
 
@@ -161,8 +162,8 @@ void Timing::reloadTimingsView()
     timingsView->clear();
     QList<float> timingsKeys = timings.keys();
     for (float seconds : timingsKeys) {
-        QString action = timings[seconds];
-        QListWidgetItem* item = new QListWidgetItem(QString("%1 - %2").arg(seconds).arg(action), timingsView);
+        ActionType action = timings[seconds];
+        QListWidgetItem* item = new QListWidgetItem(QString("%1 - %2").arg(seconds).arg(ACTION_TYPE_TO_STRING[action]), timingsView);
         item->setData(Qt::UserRole, seconds);
     }
 }

@@ -18,10 +18,11 @@ find_package(Qt${QT_VERSION_MAJOR}  REQUIRED COMPONENTS Multimedia)
 
 set(PROJECT_SOURCES
         main.cpp
-        soundeditor.cpp soundeditor.h soundeditor.ui
+        actiontype.h
+        timingcsvparser.h timingcsvparser.cpp
         player.h player.cpp
         timing.h timing.cpp
-        timingcsvparser.h timingcsvparser.cpp
+        soundeditor.cpp soundeditor.h soundeditor.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

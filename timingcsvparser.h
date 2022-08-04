@@ -4,9 +4,13 @@
 #include <QMap>
 #include <QString>
 
+QT_BEGIN_NAMESPACE
+enum class ActionType;
+QT_END_NAMESPACE
+
 struct TimingData {
     QString soundFilePath;
-    QMap<float, QString> timings;
+    QMap<float, ActionType> timings;
     float actionLength;
 };
 

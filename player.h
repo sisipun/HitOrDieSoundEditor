@@ -21,6 +21,7 @@ public:
     void play();
     void pause();
     void stop();
+    void setPosition(float seconds);
     bool isLoaded() const;
     float getSeconds() const;
     QString getSoundName() const;

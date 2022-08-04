@@ -39,8 +39,7 @@ TimingData TimingCsvParser::read(QString line)
         QStringList splittedTiming = importedTiming.split(",");
         float seconds = splittedTiming[0].toFloat();
         QString type = splittedTiming[1];
-        if (STRING_TO_ACTION_TYPE.contains(type))
-        {
+        if (STRING_TO_ACTION_TYPE.contains(type)) {
             data.timings[seconds] = STRING_TO_ACTION_TYPE[type];
         }
     }

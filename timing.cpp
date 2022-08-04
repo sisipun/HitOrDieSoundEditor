@@ -15,6 +15,7 @@ Timing::Timing(Player* player, QWidget* parent)
     this->parser = new TimingCsvParser();
 
     timingsView = new QListWidget(this);
+    connect(timingsView, &QListWidget::itemDoubleClicked, this, &Timing::onTmingsDoubleClocked);
 
     actionLength = new QDoubleSpinBox(this);
     actionLength->setRange(0.01, 9999.99);
@@ -100,6 +101,11 @@ void Timing::onRemoveButtonClicked()
     }
 
     reloadTimingsView();
+}
+
+void Timing::onTmingsDoubleClocked(QListWidgetItem* item)
+{
+    player->setPosition(item->data(Qt::UserRole).toFloat());
 }
 
 void Timing::onExportButtonClicked()

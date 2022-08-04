@@ -86,6 +86,11 @@ void Player::stop()
     pauseButton->setText(tr(">"));
 }
 
+void Player::setPosition(float seconds)
+{
+    mediaPlayer->setPosition(seconds * 1000);
+}
+
 bool Player::isLoaded() const
 {
     return timeline->isEnabled();
@@ -96,8 +101,7 @@ float Player::getSeconds() const
     return timeline->value() / 1000.0;
 }
 
-QString
-Player::getSoundName() const
+QString Player::getSoundName() const
 {
     return title->text();
 }

@@ -5,7 +5,7 @@
 
 QT_BEGIN_NAMESPACE
 class Player;
-class TimingCsvParser;
+class SoundDataParser;
 enum class ActionType;
 class QPushButton;
 class QComboBox;
@@ -32,7 +32,7 @@ private slots:
 
 private:
     Player* player;
-    TimingCsvParser* parser;
+    SoundDataParser* parser;
 
     QListWidget* timingsView = nullptr;
     QDoubleSpinBox* actionLength = nullptr;

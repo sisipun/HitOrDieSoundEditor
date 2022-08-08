@@ -19,7 +19,7 @@ find_package(Qt${QT_VERSION_MAJOR}  REQUIRED COMPONENTS Multimedia)
 set(PROJECT_SOURCES
         main.cpp
         actiontype.h
-        timingcsvparser.h timingcsvparser.cpp
+        sounddataparser.h sounddataparser.cpp
         player.h player.cpp
         timing.h timing.cpp
         soundeditor.cpp soundeditor.h soundeditor.ui

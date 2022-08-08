@@ -2,7 +2,7 @@
 
 #include "actiontype.h"
 #include "player.h"
-#include "timingcsvparser.h"
+#include "sounddataparser.h"
 
 #include <QtWidgets>
 
@@ -12,7 +12,7 @@ Timing::Timing(Player* player, QWidget* parent)
     this->player = player;
     connect(this->player, &Player::loaded, this, &Timing::onPlayerLoaded);
 
-    this->parser = new TimingCsvParser();
+    this->parser = new SoundDataParser();
 
     timingsView = new QListWidget(this);
     connect(timingsView, &QListWidget::itemDoubleClicked, this, &Timing::onTmingsDoubleClocked);
@@ -126,9 +126,16 @@ void Timing::onExportButtonClicked()
     }
 
     QTextStream out(&exportFile);
+    QList<TimingData> timings;
+    float actionLengthValue = actionLength->value();
+    for (float key : this->timings.keys())
+    {
+        timings.append({key, key + actionLengthValue, this->timings[key]});
+    }
+
     out << ",Sound,ActionTimings,ActionLenght\n";
     out << parser->write(
-        { player->getSoundName(), timings, float(actionLength->value()) });
+        { player->getSoundName(), timings });
 }
 
 void Timing::onImportButtonClicked()
@@ -149,7 +156,7 @@ void Timing::onImportButtonClicked()
 
     QTextStream in(&importFile);
     in.readLine();
-    TimingData data = parser->read(in.readLine());
+    SoundData data = parser->read(in.readLine());
 
     if (data.soundFilePath.isEmpty()) {
         QMessageBox::information(this, tr("Illegal format"), tr("File has illegal format"));
@@ -157,8 +164,16 @@ void Timing::onImportButtonClicked()
     }
 
     player->load(data.soundFilePath);
-    timings = data.timings;
-    actionLength->setValue(data.actionLength);
+
+    float acitonLengthValue = 1.0f;
+    QMap<float, ActionType> timings;
+    for (const TimingData& timing : data.timings)
+    {
+        acitonLengthValue = timing.endSecond - timing.startSecond;
+        this->timings[timing.startSecond] = timing.action;
+    }
+
+    actionLength->setValue(acitonLengthValue);
     reloadTimingsView();
     player->play();
 }

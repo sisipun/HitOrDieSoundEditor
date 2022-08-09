@@ -1,5 +1,5 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef PLAYERWIDGET_H
+#define PLAYERWIDGET_H
 
 #include <QWidget>
 
@@ -12,10 +12,10 @@ class QLabel;
 class QPushButton;
 QT_END_NAMESPACE
 
-class Player : public QWidget {
+class PlayerWidget : public QWidget {
     Q_OBJECT
 public:
-    explicit Player(QWidget* parent = nullptr);
+    explicit PlayerWidget(QWidget* parent = nullptr);
 
     void load(const QString& soundFilePath);
     void play();
@@ -50,4 +50,4 @@ private:
     QPushButton* loadSoundButton = nullptr;
 };
 
-#endif // PLAYER_H
+#endif // PLAYERWIDGET_H

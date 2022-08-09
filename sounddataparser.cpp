@@ -1,19 +1,21 @@
 #include "sounddataparser.h"
 
 #include "actiontype.h"
+#include "soundmodel.h"
+#include "timingmodel.h"
 
 #include <QObject>
 
 SoundDataParser::SoundDataParser() { }
 
-QString SoundDataParser::write(const SoundData& data)
+QString SoundDataParser::write(const SoundModel& data)
 {
     QStringList result;
     result.append("\"\"");
     result.append(QString("\"%1\"").arg(data.soundFilePath));
 
     QStringList timings;
-    for (const TimingData& timing : data.timings) {
+    for (const TimingModel& timing : data.timings) {
         timings.append(QString("(StartSecond=%1").arg(timing.startSecond));
         timings.append(QString("EndSecond=%1").arg(timing.endSecond));
         timings.append(QString("Action=%1)").arg(ACTION_TYPE_TO_STRING[timing.action]));
@@ -24,9 +26,9 @@ QString SoundDataParser::write(const SoundData& data)
     return result.join(",");
 }
 
-SoundData SoundDataParser::read(QString line)
+SoundModel SoundDataParser::read(QString line)
 {
-    SoundData data;
+    SoundModel data;
     QStringList result = line.mid(1, line.length() - 2).split("\",\"");
     if (result.size() != 3) {
         return data;
@@ -37,7 +39,7 @@ SoundData SoundDataParser::read(QString line)
     QStringList importedTimings = result[2].mid(2, result[2].length() - 4).split("),(");
     for (const QString& importedTiming : importedTimings) {
         QStringList timingParams = importedTiming.split(",");
-        TimingData timing;
+        TimingModel timing;
         for (const QString& timingParam : timingParams) {
             QStringList splittedTimingParam = timingParam.split("=");
             QString key = splittedTimingParam[0];

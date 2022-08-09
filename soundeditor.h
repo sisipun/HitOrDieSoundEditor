@@ -7,8 +7,8 @@ QT_BEGIN_NAMESPACE
 namespace Ui {
 class SoundEditor;
 }
-class Player;
-class Timing;
+class PlayerWidget;
+class TimingWidget;
 QT_END_NAMESPACE
 
 class SoundEditor : public QMainWindow {
@@ -20,7 +20,7 @@ public:
 
 private:
     Ui::SoundEditor* ui;
-    Player* player = nullptr;
-    Timing* timing = nullptr;
+    PlayerWidget* player = nullptr;
+    TimingWidget* timing = nullptr;
 };
 #endif // SOUNDEDITOR_H

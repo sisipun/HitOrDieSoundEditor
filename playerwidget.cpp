@@ -1,17 +1,17 @@
-#include "player.h"
+#include "playerwidget.h"
 
 #include <QAudioOutput>
 #include <QMediaPlayer>
 #include <QtWidgets>
 
-Player::Player(QWidget* parent)
+PlayerWidget::PlayerWidget(QWidget* parent)
     : QWidget { parent }
 {
     mediaPlayer = new QMediaPlayer(this);
     audioOutput = new QAudioOutput(this);
     mediaPlayer->setAudioOutput(audioOutput);
-    connect(mediaPlayer, &QMediaPlayer::durationChanged, this, &Player::onDurationChanged);
-    connect(mediaPlayer, &QMediaPlayer::positionChanged, this, &Player::onPositionChanged);
+    connect(mediaPlayer, &QMediaPlayer::durationChanged, this, &PlayerWidget::onDurationChanged);
+    connect(mediaPlayer, &QMediaPlayer::positionChanged, this, &PlayerWidget::onPositionChanged);
 
     title = new QLabel(this);
     title->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
@@ -19,14 +19,14 @@ Player::Player(QWidget* parent)
     pauseButton = new QPushButton();
     pauseButton->setText(tr(">"));
     pauseButton->setDisabled(true);
-    connect(pauseButton, &QPushButton::clicked, this, &Player::onPauseButtonClicked);
+    connect(pauseButton, &QPushButton::clicked, this, &PlayerWidget::onPauseButtonClicked);
 
     timeline = new QSlider(Qt::Horizontal, this);
     timeline->setDisabled(true);
-    connect(timeline, &QSlider::sliderPressed, this, &Player::onTimelinePressed);
-    connect(timeline, &QSlider::sliderReleased, this, &Player::onTimelineReleased);
-    connect(timeline, &QSlider::sliderMoved, this, &Player::onTimelineMoved);
-    connect(timeline, &QSlider::valueChanged, this, &Player::onTimelineValueChanged);
+    connect(timeline, &QSlider::sliderPressed, this, &PlayerWidget::onTimelinePressed);
+    connect(timeline, &QSlider::sliderReleased, this, &PlayerWidget::onTimelineReleased);
+    connect(timeline, &QSlider::sliderMoved, this, &PlayerWidget::onTimelineMoved);
+    connect(timeline, &QSlider::valueChanged, this, &PlayerWidget::onTimelineValueChanged);
 
     timer = new QTimeEdit(this);
     timer->setDisplayFormat("HH:mm:ss");
@@ -36,7 +36,7 @@ Player::Player(QWidget* parent)
 
     loadSoundButton = new QPushButton(this);
     loadSoundButton->setText(tr("Load sound"));
-    connect(loadSoundButton, &QPushButton::clicked, this, &Player::onLoadSoundButtonClicked);
+    connect(loadSoundButton, &QPushButton::clicked, this, &PlayerWidget::onLoadSoundButtonClicked);
 
     QBoxLayout* layout = new QVBoxLayout(this);
 
@@ -58,7 +58,7 @@ Player::Player(QWidget* parent)
     setLayout(layout);
 }
 
-void Player::load(const QString& soundFilePath)
+void PlayerWidget::load(const QString& soundFilePath)
 {
     title->setText(soundFilePath);
     timeline->setDisabled(false);
@@ -67,46 +67,46 @@ void Player::load(const QString& soundFilePath)
     emit loaded(true);
 }
 
-void Player::play()
+void PlayerWidget::play()
 {
     mediaPlayer->play();
     pauseButton->setText(tr("||"));
 }
 
-void Player::pause()
+void PlayerWidget::pause()
 {
     mediaPlayer->pause();
     pauseButton->setText(tr(">"));
 }
 
-void Player::stop()
+void PlayerWidget::stop()
 {
     mediaPlayer->stop();
     timeline->setValue(0);
     pauseButton->setText(tr(">"));
 }
 
-void Player::setPosition(float seconds)
+void PlayerWidget::setPosition(float seconds)
 {
     mediaPlayer->setPosition(seconds * 1000);
 }
 
-bool Player::isLoaded() const
+bool PlayerWidget::isLoaded() const
 {
     return timeline->isEnabled();
 }
 
-float Player::getSeconds() const
+float PlayerWidget::getSeconds() const
 {
     return timeline->value() / 1000.0;
 }
 
-QString Player::getSoundName() const
+QString PlayerWidget::getSoundName() const
 {
     return title->text();
 }
 
-void Player::onLoadSoundButtonClicked()
+void PlayerWidget::onLoadSoundButtonClicked()
 {
     pause();
     QString soundFilePath = QFileDialog::getOpenFileName(
@@ -119,7 +119,7 @@ void Player::onLoadSoundButtonClicked()
     play();
 }
 
-void Player::onPauseButtonClicked()
+void PlayerWidget::onPauseButtonClicked()
 {
     if (mediaPlayer->playbackState() == QMediaPlayer::PlaybackState::PlayingState) {
         pause();
@@ -128,22 +128,22 @@ void Player::onPauseButtonClicked()
     }
 }
 
-void Player::onDurationChanged(qint64 duration)
+void PlayerWidget::onDurationChanged(qint64 duration)
 {
     timeline->setMaximum(duration);
 }
 
-void Player::onPositionChanged(qint64 position)
+void PlayerWidget::onPositionChanged(qint64 position)
 {
     timeline->setValue(position);
 }
 
-void Player::onTimelinePressed()
+void PlayerWidget::onTimelinePressed()
 {
     mediaPlayer->pause();
 }
 
-void Player::onTimelineReleased()
+void PlayerWidget::onTimelineReleased()
 {
     if (timeline->maximum() != timeline->value()) {
         play();
@@ -152,12 +152,12 @@ void Player::onTimelineReleased()
     }
 }
 
-void Player::onTimelineMoved(int value)
+void PlayerWidget::onTimelineMoved(int value)
 {
     mediaPlayer->setPosition(value);
 }
 
-void Player::onTimelineValueChanged(int value)
+void PlayerWidget::onTimelineValueChanged(int value)
 {
     timer->setTime(QTime::fromMSecsSinceStartOfDay(value));
 

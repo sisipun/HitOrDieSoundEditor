@@ -1,11 +1,12 @@
-#ifndef TIMING_H
-#define TIMING_H
+#ifndef TIMINGWIDGET_H
+#define TIMINGWIDGET_H
 
 #include <QWidget>
 
 QT_BEGIN_NAMESPACE
-class Player;
+class PlayerWidget;
 class SoundDataParser;
+class TimingModel;
 enum class ActionType;
 class QPushButton;
 class QComboBox;
@@ -14,11 +15,11 @@ class QListWidgetItem;
 class QDoubleSpinBox;
 QT_END_NAMESPACE
 
-class Timing : public QWidget {
+class TimingWidget : public QWidget {
     Q_OBJECT
 public:
-    explicit Timing(Player* player, QWidget* parent = nullptr);
-    ~Timing();
+    explicit TimingWidget(PlayerWidget* player, QWidget* parent = nullptr);
+    ~TimingWidget();
 
     void reloadTimingsView();
 
@@ -26,12 +27,14 @@ private slots:
     void onPlayerLoaded(bool loaded);
     void onAddButtonClicked();
     void onRemoveButtonClicked();
+    void onAdjustLengthButtonClicked();
     void onTmingsDoubleClocked(QListWidgetItem* item);
     void onExportButtonClicked();
     void onImportButtonClicked();
+    void keyPressEvent(QKeyEvent* event) override;
 
 private:
-    Player* player;
+    PlayerWidget* player;
     SoundDataParser* parser;
 
     QListWidget* timingsView = nullptr;
@@ -42,7 +45,7 @@ private:
     QPushButton* exportButton = nullptr;
     QPushButton* importButton = nullptr;
 
-    QMap<float, ActionType> timings;
+    QMap<float, TimingModel> timings;
 };
 
-#endif // TIMING_H
+#endif // TIMINGWIDGET_H

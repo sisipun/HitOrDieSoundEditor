@@ -86,19 +86,19 @@ void PlayerWidget::stop()
     pauseButton->setText(tr(">"));
 }
 
-void PlayerWidget::setPosition(float seconds)
-{
-    mediaPlayer->setPosition(seconds * 1000);
-}
-
 bool PlayerWidget::isLoaded() const
 {
     return timeline->isEnabled();
 }
 
-float PlayerWidget::getSeconds() const
+float PlayerWidget::getPosition() const
 {
     return timeline->value() / 1000.0;
+}
+
+void PlayerWidget::setPosition(float seconds)
+{
+    mediaPlayer->setPosition(seconds * 1000);
 }
 
 QString PlayerWidget::getSoundName() const

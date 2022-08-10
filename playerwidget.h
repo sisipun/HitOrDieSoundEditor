@@ -21,9 +21,9 @@ public:
     void play();
     void pause();
     void stop();
-    void setPosition(float seconds);
     bool isLoaded() const;
-    float getSeconds() const;
+    float getPosition() const;
+    void setPosition(float seconds);
     QString getSoundName() const;
 
 signals:
@@ -44,9 +44,9 @@ private:
     QAudioOutput* audioOutput = nullptr;
 
     QLabel* title = nullptr;
-    QPushButton* pauseButton = nullptr;
     QSlider* timeline = nullptr;
     QTimeEdit* timer = nullptr;
+    QPushButton* pauseButton = nullptr;
     QPushButton* loadSoundButton = nullptr;
 };
 

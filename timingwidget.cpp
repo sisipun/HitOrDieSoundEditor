@@ -17,17 +17,18 @@ TimingWidget::TimingWidget(PlayerWidget* player, QWidget* parent)
     this->parser = new SoundDataParser();
 
     timingsView = new QListWidget(this);
+    timingsView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     connect(timingsView, &QListWidget::itemDoubleClicked, this, &TimingWidget::onTmingsDoubleClocked);
 
-    actionLength = new QDoubleSpinBox(this);
-    actionLength->setRange(0.01, 9999.99);
-    actionLength->setValue(1.0);
-    actionLength->setDisabled(true);
+    actionLengthInput = new QDoubleSpinBox(this);
+    actionLengthInput->setRange(0.01, 9999.99);
+    actionLengthInput->setValue(1.0);
+    actionLengthInput->setDisabled(true);
 
-    actions = new QComboBox(this);
-    actions->addItems(QStringList(STRING_TO_ACTION_TYPE.keys()));
-    actions->setCurrentIndex(0);
-    actions->setDisabled(true);
+    actionSelect = new QComboBox(this);
+    actionSelect->addItems(QStringList(STRING_TO_ACTION_TYPE.keys()));
+    actionSelect->setCurrentIndex(0);
+    actionSelect->setDisabled(true);
 
     addButton = new QPushButton(this);
     addButton->setText(tr("+"));
@@ -55,8 +56,8 @@ TimingWidget::TimingWidget(PlayerWidget* player, QWidget* parent)
     listLayout->addWidget(timingsView);
 
     QBoxLayout* timingsActionsLayout = new QHBoxLayout;
-    timingsActionsLayout->addWidget(actionLength, 1);
-    timingsActionsLayout->addWidget(actions, 1);
+    timingsActionsLayout->addWidget(actionLengthInput, 1);
+    timingsActionsLayout->addWidget(actionSelect, 1);
     timingsActionsLayout->addWidget(addButton, 1);
     timingsActionsLayout->addWidget(removeButton, 1);
 
@@ -78,22 +79,35 @@ TimingWidget::~TimingWidget()
 
 void TimingWidget::onPlayerLoaded(bool loaded)
 {
-    actionLength->setDisabled(!loaded);
-    actions->setDisabled(!loaded);
+    actionLengthInput->setDisabled(!loaded);
+    actionSelect->setDisabled(!loaded);
     addButton->setDisabled(!loaded);
     removeButton->setDisabled(!loaded);
     exportButton->setDisabled(!loaded);
     timings.clear();
-    actionLength->setValue(1.0);
+    actionLengthInput->setValue(1.0);
     reloadTimingsView();
 }
 
 void TimingWidget::onAddButtonClicked()
 {
-    float seconds = player->getSeconds();
-    float actionLengthValue = actionLength->value();
-    QString action = actions->currentText();
-    timings[seconds] = { seconds, seconds + actionLengthValue, STRING_TO_ACTION_TYPE[action] };
+    float startSecond = player->getPosition();
+    float actionLength = actionLengthInput->value();
+    QString action = actionSelect->currentText();
+    timings[startSecond] = { startSecond, startSecond + actionLength, STRING_TO_ACTION_TYPE[action] };
+    reloadTimingsView();
+}
+
+void TimingWidget::onUpdateButtonClicked()
+{
+    for (QListWidgetItem* item : timingsView->selectedItems()) {
+        TimingModel& timing = timings[item->data(Qt::UserRole).toFloat()];
+        float actionLength = actionLengthInput->value();
+        QString action = actionSelect->currentText();
+        timing.endSecond = timing.startSecond + actionLength;
+        timing.action = STRING_TO_ACTION_TYPE[action];
+    }
+
     reloadTimingsView();
 }
 
@@ -101,16 +115,6 @@ void TimingWidget::onRemoveButtonClicked()
 {
     for (QListWidgetItem* item : timingsView->selectedItems()) {
         timings.remove(item->data(Qt::UserRole).toFloat());
-    }
-
-    reloadTimingsView();
-}
-
-void TimingWidget::onAdjustLengthButtonClicked()
-{
-    for (QListWidgetItem* item : timingsView->selectedItems()) {
-        TimingModel& timing = timings[item->data(Qt::UserRole).toFloat()];
-        timing.endSecond = timing.startSecond + actionLength->value();
     }
 
     reloadTimingsView();
@@ -180,7 +184,7 @@ void TimingWidget::onImportButtonClicked()
 void TimingWidget::keyPressEvent(QKeyEvent* event)
 {
     if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) {
-        onAdjustLengthButtonClicked();
+        onUpdateButtonClicked();
     } else if (event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Delete) {
         onRemoveButtonClicked();
     }
@@ -190,13 +194,22 @@ void TimingWidget::reloadTimingsView()
 {
     timingsView->clear();
     QList<float> timingsKeys = timings.keys();
+    float lastEndSecond = 0.0;
     for (float seconds : timingsKeys) {
         const TimingModel& timing = timings[seconds];
-        QString title = QString("%1 (%2 - %3)")
+        float distnaceFromPrevious = timing.startSecond - lastEndSecond;
+        QString title = QString("Action: %1, Timing: [%2 - %3], Distance from previous: %4")
                             .arg(ACTION_TYPE_TO_STRING[timing.action])
                             .arg(timing.startSecond)
-                            .arg(timing.endSecond);
+                            .arg(timing.endSecond)
+                            .arg(distnaceFromPrevious);
         QListWidgetItem* item = new QListWidgetItem(title, timingsView);
+        if (distnaceFromPrevious < 0.1)
+        {
+            item->setBackground(Qt::red);
+        }
+
         item->setData(Qt::UserRole, seconds);
+        lastEndSecond = timing.endSecond;
     }
 }

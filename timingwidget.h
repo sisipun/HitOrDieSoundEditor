@@ -26,8 +26,8 @@ public:
 private slots:
     void onPlayerLoaded(bool loaded);
     void onAddButtonClicked();
+    void onUpdateButtonClicked();
     void onRemoveButtonClicked();
-    void onAdjustLengthButtonClicked();
     void onTmingsDoubleClocked(QListWidgetItem* item);
     void onExportButtonClicked();
     void onImportButtonClicked();
@@ -38,8 +38,8 @@ private:
     SoundDataParser* parser;
 
     QListWidget* timingsView = nullptr;
-    QDoubleSpinBox* actionLength = nullptr;
-    QComboBox* actions = nullptr;
+    QDoubleSpinBox* actionLengthInput = nullptr;
+    QComboBox* actionSelect = nullptr;
     QPushButton* addButton = nullptr;
     QPushButton* removeButton = nullptr;
     QPushButton* exportButton = nullptr;

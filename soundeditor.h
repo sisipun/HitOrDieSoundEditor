@@ -18,6 +18,9 @@ public:
     SoundEditor(QWidget* parent = nullptr);
     ~SoundEditor();
 
+private slots:
+    void keyPressEvent(QKeyEvent* event) override;
+
 private:
     Ui::SoundEditor* ui;
     PlayerWidget* player = nullptr;

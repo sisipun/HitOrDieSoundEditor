@@ -91,6 +91,21 @@ bool PlayerWidget::isLoaded() const
     return timeline->isEnabled();
 }
 
+bool PlayerWidget::isPlaying() const
+{
+    return mediaPlayer->playbackState() == QMediaPlayer::PlaybackState::PlayingState;
+}
+
+bool PlayerWidget::isPaused() const
+{
+    return mediaPlayer->playbackState() == QMediaPlayer::PlaybackState::PausedState;
+}
+
+bool PlayerWidget::isStopped() const
+{
+    return mediaPlayer->playbackState() == QMediaPlayer::PlaybackState::StoppedState;
+}
+
 float PlayerWidget::getPosition() const
 {
     return timeline->value() / 1000.0;
@@ -121,7 +136,7 @@ void PlayerWidget::onLoadSoundButtonClicked()
 
 void PlayerWidget::onPauseButtonClicked()
 {
-    if (mediaPlayer->playbackState() == QMediaPlayer::PlaybackState::PlayingState) {
+    if (isPlaying()) {
         pause();
     } else {
         play();
@@ -136,6 +151,7 @@ void PlayerWidget::onDurationChanged(qint64 duration)
 void PlayerWidget::onPositionChanged(qint64 position)
 {
     timeline->setValue(position);
+    emit positionChanged(getPosition());
 }
 
 void PlayerWidget::onTimelinePressed()

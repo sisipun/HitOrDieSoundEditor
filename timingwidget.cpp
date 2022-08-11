@@ -13,6 +13,7 @@ TimingWidget::TimingWidget(PlayerWidget* player, QWidget* parent)
 {
     this->player = player;
     connect(this->player, &PlayerWidget::loaded, this, &TimingWidget::onPlayerLoaded);
+    connect(this->player, &PlayerWidget::positionChanged, this, &TimingWidget::onPositionChanged);
 
     this->parser = new SoundDataParser();
 
@@ -87,6 +88,22 @@ void TimingWidget::onPlayerLoaded(bool loaded)
     timings.clear();
     actionLengthInput->setValue(1.0);
     reloadTimingsView();
+}
+
+void TimingWidget::onPositionChanged(float position)
+{
+    int currentRow = 0;
+    QList<float> timingsKeys = timings.keys();
+    for (float key : timingsKeys) {
+        const TimingModel& timing = timings[key];
+        if (position > timing.startSecond && position < timing.endSecond) {
+            timingsView->setCurrentRow(currentRow);
+            timingsView->scrollToItem(timingsView->currentItem(), QAbstractItemView::ScrollHint::PositionAtCenter);
+            break;
+        }
+
+        currentRow++;
+    }
 }
 
 void TimingWidget::onAddButtonClicked()
@@ -204,9 +221,10 @@ void TimingWidget::reloadTimingsView()
                             .arg(timing.endSecond)
                             .arg(distnaceFromPrevious);
         QListWidgetItem* item = new QListWidgetItem(title, timingsView);
-        if (distnaceFromPrevious < 0.1)
-        {
+        if (distnaceFromPrevious < 0.0) {
             item->setBackground(Qt::red);
+        } else if (distnaceFromPrevious < 0.3) {
+            item->setBackground(Qt::darkYellow);
         }
 
         item->setData(Qt::UserRole, seconds);

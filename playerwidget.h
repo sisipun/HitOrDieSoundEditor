@@ -22,12 +22,16 @@ public:
     void pause();
     void stop();
     bool isLoaded() const;
+    bool isPlaying() const;
+    bool isPaused() const;
+    bool isStopped() const;
     float getPosition() const;
     void setPosition(float seconds);
     QString getSoundName() const;
 
 signals:
     void loaded(bool loaded);
+    void positionChanged(float position);
 
 private slots:
     void onLoadSoundButtonClicked();

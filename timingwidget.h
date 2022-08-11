@@ -25,12 +25,15 @@ public:
 
 private slots:
     void onPlayerLoaded(bool loaded);
+    void onPositionChanged(float position);
+
     void onAddButtonClicked();
     void onUpdateButtonClicked();
     void onRemoveButtonClicked();
     void onTmingsDoubleClocked(QListWidgetItem* item);
     void onExportButtonClicked();
     void onImportButtonClicked();
+
     void keyPressEvent(QKeyEvent* event) override;
 
 private:

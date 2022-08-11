@@ -4,6 +4,8 @@
 #include "playerwidget.h"
 #include "timingwidget.h"
 
+#include <QKeyEvent>
+
 SoundEditor::SoundEditor(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::SoundEditor)
@@ -15,9 +17,22 @@ SoundEditor::SoundEditor(QWidget* parent)
 
     ui->gridLayout->addWidget(player);
     ui->gridLayout->addWidget(timing);
+
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 SoundEditor::~SoundEditor()
 {
     delete ui;
+}
+
+void SoundEditor::keyPressEvent(QKeyEvent* event)
+{
+    if (event->key() == Qt::Key_Space) {
+        if (player->isPlaying()) {
+            player->pause();
+        } else {
+            player->play();
+        }
+    }
 }

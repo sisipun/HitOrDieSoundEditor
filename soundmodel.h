@@ -1,14 +1,13 @@
 #ifndef SOUNDMODEL_H
 #define SOUNDMODEL_H
 
+#include "timingmodel.h"
+
 #include <QList>
 #include <QString>
 
-QT_BEGIN_NAMESPACE
-class TimingModel;
-QT_END_NAMESPACE
-
 struct SoundModel {
+    QString soundName;
     QString soundFilePath;
     QList<TimingModel> timings;
 };

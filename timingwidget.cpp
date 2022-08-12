@@ -2,6 +2,7 @@
 
 #include "actiontype.h"
 #include "playerwidget.h"
+#include "sounddatafile.h"
 #include "sounddataparser.h"
 #include "soundmodel.h"
 #include "timingmodel.h"
@@ -153,16 +154,8 @@ void TimingWidget::onExportButtonClicked()
         return;
     }
 
-    QFile exportFile(exportFilePath);
-    if (!exportFile.open(QIODevice::WriteOnly)) {
-        QMessageBox::information(this, tr("Unable to open file"), exportFile.errorString());
-        return;
-    }
-
-    QTextStream out(&exportFile);
-
-    out << ",Sound,ActionTimings,ActionLenght\n";
-    out << parser->write({ player->getSoundName(), timings.values() });
+    SoundDataFile file(exportFilePath);
+    file.write({ { "Default", player->getSoundName(), timings.values() } });
 }
 
 void TimingWidget::onImportButtonClicked()
@@ -175,28 +168,20 @@ void TimingWidget::onImportButtonClicked()
         return;
     }
 
-    QFile importFile(importFilePath);
-    if (!importFile.open(QIODevice::ReadOnly)) {
-        QMessageBox::information(this, tr("Unable to open file"), importFile.errorString());
-        return;
+    SoundDataFile file(importFilePath);
+    QList<SoundModel> sounds = file.read();
+
+    if (sounds.length() > 0) {
+        const SoundModel& data = sounds[0];
+
+        player->load(data.soundFilePath);
+        for (const TimingModel& timing : data.timings) {
+            timings[timing.startSecond] = timing;
+        }
+
+        reloadTimingsView();
+        player->play();
     }
-
-    QTextStream in(&importFile);
-    in.readLine();
-    const SoundModel& data = parser->read(in.readLine());
-
-    if (data.soundFilePath.isEmpty()) {
-        QMessageBox::information(this, tr("Illegal format"), tr("File has illegal format"));
-        return;
-    }
-
-    player->load(data.soundFilePath);
-    for (const TimingModel& timing : data.timings) {
-        timings[timing.startSecond] = timing;
-    }
-
-    reloadTimingsView();
-    player->play();
 }
 
 void TimingWidget::keyPressEvent(QKeyEvent* event)

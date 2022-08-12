@@ -24,6 +24,7 @@ set(PROJECT_SOURCES
         soundmodel.h
 
         sounddataparser.h sounddataparser.cpp
+        sounddatafile.h sounddatafile.cpp
 
         timingview.h timingview.cpp
         playerwidget.h playerwidget.cpp

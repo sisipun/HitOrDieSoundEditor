@@ -1,11 +1,9 @@
 #ifndef TIMINGMODEL_H
 #define TIMINGMODEL_H
 
-#include <Qt>
+#include "actiontype.h"
 
-QT_BEGIN_NAMESPACE
-enum class ActionType;
-QT_END_NAMESPACE
+#include <Qt>
 
 struct TimingModel {
     float startSecond;

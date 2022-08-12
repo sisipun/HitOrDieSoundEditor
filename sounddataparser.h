@@ -7,7 +7,6 @@ QT_BEGIN_NAMESPACE
 class SoundModel;
 QT_END_NAMESPACE
 
-
 class SoundDataParser {
 public:
     SoundDataParser();

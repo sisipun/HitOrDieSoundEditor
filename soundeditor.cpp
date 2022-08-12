@@ -34,5 +34,7 @@ void SoundEditor::keyPressEvent(QKeyEvent* event)
         } else {
             player->play();
         }
+    } else {
+        QMainWindow::keyPressEvent(event);
     }
 }

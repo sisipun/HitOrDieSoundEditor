@@ -7,6 +7,7 @@ QT_BEGIN_NAMESPACE
 class PlayerWidget;
 class SoundDataParser;
 class TimingModel;
+class TimingView;
 enum class ActionType;
 class QPushButton;
 class QComboBox;
@@ -40,7 +41,7 @@ private:
     PlayerWidget* player;
     SoundDataParser* parser;
 
-    QListWidget* timingsView = nullptr;
+    TimingView* timingsView = nullptr;
     QDoubleSpinBox* actionLengthInput = nullptr;
     QComboBox* actionSelect = nullptr;
     QPushButton* addButton = nullptr;

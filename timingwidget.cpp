@@ -5,6 +5,7 @@
 #include "sounddataparser.h"
 #include "soundmodel.h"
 #include "timingmodel.h"
+#include "timingview.h"
 
 #include <QtWidgets>
 
@@ -17,7 +18,7 @@ TimingWidget::TimingWidget(PlayerWidget* player, QWidget* parent)
 
     this->parser = new SoundDataParser();
 
-    timingsView = new QListWidget(this);
+    timingsView = new TimingView(this);
     timingsView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     connect(timingsView, &QListWidget::itemDoubleClicked, this, &TimingWidget::onTmingsDoubleClocked);
 
@@ -204,6 +205,8 @@ void TimingWidget::keyPressEvent(QKeyEvent* event)
         onUpdateButtonClicked();
     } else if (event->key() == Qt::Key_Backspace || event->key() == Qt::Key_Delete) {
         onRemoveButtonClicked();
+    } else {
+        QWidget::keyPressEvent(event);
     }
 }
 

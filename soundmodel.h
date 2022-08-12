@@ -1,8 +1,8 @@
 #ifndef SOUNDMODEL_H
 #define SOUNDMODEL_H
 
-#include <QString>
 #include <QList>
+#include <QString>
 
 QT_BEGIN_NAMESPACE
 class TimingModel;

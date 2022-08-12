@@ -69,21 +69,27 @@ void PlayerWidget::load(const QString& soundFilePath)
 
 void PlayerWidget::play()
 {
-    mediaPlayer->play();
-    pauseButton->setText(tr("||"));
+    if (isLoaded()) {
+        mediaPlayer->play();
+        pauseButton->setText(tr("||"));
+    }
 }
 
 void PlayerWidget::pause()
 {
-    mediaPlayer->pause();
-    pauseButton->setText(tr(">"));
+    if (isLoaded()) {
+        mediaPlayer->pause();
+        pauseButton->setText(tr(">"));
+    }
 }
 
 void PlayerWidget::stop()
 {
-    mediaPlayer->stop();
-    timeline->setValue(0);
-    pauseButton->setText(tr(">"));
+    if (isLoaded()) {
+        mediaPlayer->stop();
+        timeline->setValue(0);
+        pauseButton->setText(tr(">"));
+    }
 }
 
 bool PlayerWidget::isLoaded() const

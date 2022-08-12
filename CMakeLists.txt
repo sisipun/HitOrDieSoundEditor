@@ -18,12 +18,17 @@ find_package(Qt${QT_VERSION_MAJOR}  REQUIRED COMPONENTS Multimedia)
 
 set(PROJECT_SOURCES
         main.cpp
+
         actiontype.h
         timingmodel.h
         soundmodel.h
+
         sounddataparser.h sounddataparser.cpp
+
+        timingview.h timingview.cpp
         playerwidget.h playerwidget.cpp
         timingwidget.h timingwidget.cpp
+
         soundeditor.cpp soundeditor.h soundeditor.ui
 )
 

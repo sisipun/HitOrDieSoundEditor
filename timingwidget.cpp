@@ -20,7 +20,7 @@ TimingWidget::TimingWidget(PlayerWidget* player, QWidget* parent)
 
     timingsView = new TimingView(this);
     timingsView->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    connect(timingsView, &QListWidget::itemDoubleClicked, this, &TimingWidget::onTmingsDoubleClocked);
+    connect(timingsView, &TimingView::itemDoubleClicked, this, &TimingWidget::onTmingsDoubleClocked);
 
     actionLengthInput = new QDoubleSpinBox(this);
     actionLengthInput->setRange(0.01, 9999.99);

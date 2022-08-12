@@ -4,8 +4,10 @@
 #include <QMap>
 #include <QString>
 
-enum class ActionType { FIRE,
-    RELOAD };
+enum class ActionType {
+    FIRE,
+    RELOAD
+};
 
 const QMap<ActionType, QString>
     ACTION_TYPE_TO_STRING({ std::make_pair(ActionType::FIRE, "FIRE"),

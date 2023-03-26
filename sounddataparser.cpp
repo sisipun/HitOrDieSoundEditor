@@ -11,7 +11,7 @@ SoundDataParser::SoundDataParser() { }
 QString SoundDataParser::write(const SoundModel& data)
 {
     QStringList result;
-    result.append(QString("\"%1\"").arg(data.soundName));
+    result.append(QString("%1").arg(data.soundName));
     result.append(QString("\"%1\"").arg(data.soundFilePath));
 
     QStringList timings;
